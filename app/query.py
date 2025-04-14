@@ -5,7 +5,7 @@ from cassandra.cluster import Cluster
 import sys
 import math
 
-K1 = 1.2
+K1 = 1
 B = 0.75
 cluster = Cluster(['cassandra-server'])
 session = cluster.connect('search_engine')
@@ -32,11 +32,7 @@ def calculate_bm25(query_terms, doc_id, doc_length, avg_doc_length, total_docume
 
         tf = tf_row.term_frequency if tf_row else 0
 
-        idf = math.log((total_documents - df + 0.5) / (df + 0.5) + 1)
-
-        tf_component = (tf * (K1 + 1)) / (tf + K1 * (1 - B + B * (doc_length / avg_doc_length)))
-
-        score += idf * tf_component
+        score += math.log(total_documents / df) * ((K1 + 1) * tf) / (K1 * ((1 - B) + B * doc_length / avg_doc_length) + tf)
 
     return score
 
@@ -62,6 +58,7 @@ scores_rdd = [(x[0], x[2], calculate_bm25(query, x[0], x[1], avg_doc_length, tot
 
 top_docs = sorted(scores_rdd, key=lambda x: -x[2])[:10]
 
+print("query:", sys.argv[1])
 print("\nTop 10 relevant documents:")
 print("--------------------------")
 for i, (doc_id, title, score) in enumerate(top_docs, 1):

@@ -9,7 +9,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 venv-pack -o .venv.tar.gz
 
-# bash prepare_data.sh
+bash prepare_data.sh
 bash set_cassandra.sh
 # Run the indexer: first on collected dataset, then on additional file
 bash index.sh data
