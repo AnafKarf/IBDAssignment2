@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from pathvalidate import sanitize_filename
-from tqdm import tqdm
 from pyspark.sql import SparkSession
 
 
@@ -24,5 +23,8 @@ def create_doc(row):
 
 df.foreach(create_doc)
 
+with open('table.csv', 'w') as f:
+    for row in df.rdd.collect():
+        f.write(f"{row['id']}\t{row['title']}\t{row['text']}\n")
 
-df.write.csv("/index/data", sep = "\t")
+df.write.mode('overwrite').csv("/index/data", sep = "\t")

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 $HADOOP_HOME/sbin/start-dfs.sh
 
 # starting Yarn daemons
@@ -10,13 +12,14 @@ mapred --daemon start historyserver
 
 # track process IDs of services
 jps -lm
-
+hdfs dfsadmin -safemode leave
 # subtool to perform administrator functions on HDFS
 # outputs a brief report on the overall HDFS filesystem
 hdfs dfsadmin -report
 
 # If namenode in safemode then leave it
 hdfs dfsadmin -safemode leave
+hdfs dfsadmin -safemode forceExit
 
 # create a directory for spark apps in HDFS
 hdfs dfs -mkdir -p /apps/spark/jars

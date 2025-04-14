@@ -1,7 +1,8 @@
+#!/bin/bash
+
 source .venv/bin/activate
 
 
-# Python of the driver (/app/.venv/bin/python)
 export PYSPARK_DRIVER_PYTHON=$(which python)
 
 

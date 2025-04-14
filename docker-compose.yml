@@ -25,6 +25,8 @@ services:
   cluster-slave-1:
     image: firasj/spark-docker-cluster
     container_name: cluster-slave-1
+    ports:
+      - "8042:8042"
     networks:
       - spark-cluster
     hostname: cluster-slave-1

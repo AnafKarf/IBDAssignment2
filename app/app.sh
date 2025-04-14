@@ -1,25 +1,21 @@
+#!/bin/bash
+
 service ssh restart
 
-# Starting the services
 bash start-services.sh
 
-# Creating a virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
-
-# Install any packages
 pip install -r requirements.txt
-
-# Package the virtual env.
 venv-pack -o .venv.tar.gz
 
-# Collect data
-bash prepare_data.sh
-
+# bash prepare_data.sh
 bash set_cassandra.sh
+# Run the indexer: first on collected dataset, then on additional file
+bash index.sh data
+bash index.sh 123_cute_cats.txt
 
-# Run the indexer
-bash index.sh hdfs://index/data
-
-# Run the ranker
-bash search.sh "this is a query!"
+# Test on three queries
+bash search.sh "famous scientist"
+bash search.sh "cute cats"
+bash search.sh "a spatial Fourier transform"
